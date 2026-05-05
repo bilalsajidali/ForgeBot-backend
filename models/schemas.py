@@ -39,30 +39,33 @@ class FAQItem(BaseModel):
 
 class CreateAgentRequest(BaseModel):
     name: str = Field(..., min_length=2, max_length=100)
-    business_name: str = Field(..., min_length=2, max_length=100)
-    business_description: str = Field(..., min_length=10, max_length=2000)
+    bot_knowledge: str = Field(..., min_length=10, max_length=50000)
     tone: str = Field(default="friendly")  # friendly | formal | sales
     faqs: Optional[List[FAQItem]] = []
 
 
 class UpdateAgentRequest(BaseModel):
-    name: Optional[str] = None
-    business_name: Optional[str] = None
-    business_description: Optional[str] = None
+    name: Optional[str] = Field(default=None, min_length=2, max_length=100)
+    bot_knowledge: Optional[str] = Field(default=None, min_length=10, max_length=50000)
     tone: Optional[str] = None
     faqs: Optional[List[FAQItem]] = None
+
+
+class KnowledgeDocumentSummary(BaseModel):
+    filename: str
+    chars: int
 
 
 class AgentResponse(BaseModel):
     id: str
     name: str
-    business_name: str
-    business_description: str
+    bot_knowledge: str
     tone: str
     faqs: List[FAQItem]
     api_key: str
     is_active: bool
     created_at: datetime
+    documents: List[KnowledgeDocumentSummary] = []
 
 
 # ── Chat ──────────────────────────────────────────────────────────────────────
